@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <lang="ko">
+    <meta charset="UTF-8">
+    <title>수원타겟존의 모든 것을 알려드릴 도우미, 타수미입니다.</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+
+<body>
+    <div class="header">
+        <img src="Slogan_Shooting_Target_Sheet.png" alt="수원타겟존 슬로건"/>
+    </div>
+    <div class="chat-container">
+        <div id="chatbox" class="chat-box">
+            <!-- Chat messages will be added here dynamically -->
+        </div>
+        
+        <div class="chat-input">
+            <input id="textInput" type="text" placeholder="Type a message...">
+            <button>Send</button>
+        </div>
+        <div id="spinner" class="spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <div id="notification" class="notification">
+            글자수 제한안내: 질문과 답변은 각각 180자, 대화의 전체 글자수는 약 2000자입니다.
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="script.js" defer></script> -->
+    <script src="script.js"></script>
+
+</body>
+</html>
