@@ -21,7 +21,7 @@ const sendMessage = async() => {
     // Show spinner
     document.getElementById('spinner').style.display = 'block';
 
-    const response = await fetch('https://isvu5wdiychklgafmi4fkrturu0wbjtm.lambda-url.us-east-1.on.aws/tarsumy', {
+    const response = await fetch('https://wanjyc3dastu6v4lst4eyeu3bm0rnpyb.lambda-url.us-east-1.on.aws/tarsumy', {
         method: 'POST',
         headers: {
             'Access-Control-Allow-Origin': '*',
