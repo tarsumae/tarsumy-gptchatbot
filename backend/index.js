@@ -4,6 +4,7 @@ const path = require('path');
 const express = require('express');
 var cors = require('cors');
 const app = express();
+const PORT = 8080;
 const apiKey = process.env.OPENAI_API_KEY;
 const { Configuration, OpenAIApi } = require("openai");
 
@@ -58,13 +59,21 @@ app.post('/tarsumy', async function (req, res) {
     res.json({"assistant": tarsumy});
 });
 
-module.exports.handler = serverless(app);
+// serverless로 배포하는 대신
+//module.exports.handler = serverless(app);
+
+// express로 웹 서버 시작
+app.listen(PORT, function() {
+  console.log("Listening on port" + PORT);
+});
+
+app.use(function (err, req, res, next) {
+   console.error(err.stack)
+   res.status(500).send('Something broke!')
+})
 
 // app.listen(5500, () => {
 //     console.log('Server is running on port 5500');
 // });
 
-// app.use(function (err, req, res, next) {
-//   console.error(err.stack)
-//   res.status(500).send('Something broke!')
-// })
+
