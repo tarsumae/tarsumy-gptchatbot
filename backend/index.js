@@ -16,7 +16,7 @@ const openai = new OpenAIApi(configuration);
 const systemMessage = fs.readFileSync('system.txt', 'utf-8'); // replace 'frontend' with your actual directory name
 
 let corsOptions = {
-    origin: 'https://web-tarsumy-gptchatbot-7e6o2cli1ltald.sel4.cloudtype.app/',
+    origin: 'https://tarsumy.pages.dev/',
     credentials: true,
 }
 
