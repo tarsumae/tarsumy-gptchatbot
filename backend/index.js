@@ -1,6 +1,4 @@
-//require('dotenv').config();
-
-const serverless = require('serverless-http');
+// const serverless = require('serverless-http');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -17,7 +15,7 @@ const openai = new OpenAIApi(configuration);
 const systemMessage = fs.readFileSync('system.txt', 'utf-8'); // replace 'frontend' with your actual directory name
 
 let corsOptions = {
-    origin: 'https://tarsumy.pages.dev',
+    origin: 'https://web-tarsumy-gptchatbot-7e6o2cli1ltald.sel4.cloudtype.app/',
     credentials: true,
 }
 
