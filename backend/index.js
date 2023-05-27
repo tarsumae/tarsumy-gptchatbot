@@ -16,11 +16,16 @@ const openai = new OpenAIApi(configuration);
 const systemMessage = fs.readFileSync('system.txt', 'utf-8'); // replace 'frontend' with your actual directory name
 
 let corsOptions = {
-    origin: 'https://tarsumy.pages.dev/',
+    origin: 'https://tarsumy.pages.dev',
     credentials: true,
+    optionsSuccessStatus: 200
 }
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions), function(req, res, next) {
+  console.log("CORS passed");
+  next();
+});
+
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
@@ -54,13 +59,16 @@ app.post('/tarsumy', async function (req, res) {
         }
     }
 
-    let tarsumy = completion.data.choices[0].message['content']
+    let tarsumy;
+    if (completion) {
+    tarsumy = completion.data.choices[0].message['content']
     console.log(tarsumy);
     res.json({"assistant": tarsumy});
+    } else {
+    console.log("All attempts to reach OpenAI have failed.");
+    res.status(500).send('Could not reach OpenAI');
+    }
 });
-
-// serverless로 배포하는 대신
-//module.exports.handler = serverless(app);
 
 // express로 웹 서버 시작
 app.listen(PORT, function() {
@@ -71,6 +79,9 @@ app.use(function (err, req, res, next) {
    console.error(err.stack)
    res.status(500).send('Something broke!')
 })
+
+// serverless로 배포하는 대신
+//module.exports.handler = serverless(app);
 
 // app.listen(5500, () => {
 //     console.log('Server is running on port 5500');
