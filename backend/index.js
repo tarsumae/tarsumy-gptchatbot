@@ -30,12 +30,12 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // POST method route
-app.post('/tarsumy', async function (req, res) {
-    console.log(req.body);
-    const messages = [
-        {role: "system", content: systemMessage},
-        {role: "user", content: req.body.message},
-    ];
+app.post('/tarsymy', async function (req, res) {
+    let messages = [
+        {role: "system", content: "당신은 수원타겟존의 최고 안내도우미인, 타수미입니다. 당신은 수원타겟존과 관련된 어떤 질문도 친절하게 안내해 줄 수 있습니다."},
+        {role: "user", content: "당신은 수원타겟존의 최고 안내도우미인, 타수미입니다. 당신은 수원타겟존과 관련된 어떤 질문도 친절하게 안내해 줄 수 있습니다."},
+        {role: "assistant", content: "안녕하세요! 저는 수원타겟존의 안내도우미 타수미입니다. 무엇을 도와드릴까요?."},
+    ]
 
     const maxRetries = 3;
     let retries = 0;
@@ -59,15 +59,8 @@ app.post('/tarsumy', async function (req, res) {
         }
     }
 
-    let tarsumy;
-    if (completion) {
-    tarsumy = completion.data.choices[0].message['content']
-    console.log(tarsumy);
+    let tarsumy = completion.data.choices[0].message['content']
     res.json({"assistant": tarsumy});
-    } else {
-    console.log("All attempts to reach OpenAI have failed.");
-    res.status(500).send('Could not reach OpenAI');
-    }
 });
 
 // express로 웹 서버 시작
@@ -80,9 +73,7 @@ app.use(function (err, req, res, next) {
    res.status(500).send('Something broke!')
 })
 
-// serverless로 배포하는 대신
 //module.exports.handler = serverless(app);
-
 // app.listen(5500, () => {
 //     console.log('Server is running on port 5500');
 // });
