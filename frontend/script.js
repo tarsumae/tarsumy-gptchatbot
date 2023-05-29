@@ -21,7 +21,7 @@ const sendMessage = async() => {
     // Show spinner
     document.getElementById('spinner').style.display = 'block';
 
-    const response = await fetch('https://port-0-tarsumy-gptchatbot-otjl2cli4mfpx1.sel4.cloudtype.app/tarsumy', {
+    const response = await fetch('https://port-0-tarsumy-gptchatbot-otjl2cli4mfpx1.sel4.cloudtype.app', {
         method: 'POST',
         headers: {
             'Access-Control-Allow-Origin': '*',
