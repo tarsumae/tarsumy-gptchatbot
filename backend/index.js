@@ -31,11 +31,17 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 // POST method route
 app.post('/tarsymy', async function (req, res) {
-    let messages = [
-        {role: "system", content: "당신은 수원타겟존의 최고 안내도우미인, 타수미입니다. 당신은 수원타겟존과 관련된 어떤 질문도 친절하게 안내해 줄 수 있습니다."},
-        {role: "user", content: "당신은 수원타겟존의 최고 안내도우미인, 타수미입니다. 당신은 수원타겟존과 관련된 어떤 질문도 친절하게 안내해 줄 수 있습니다."},
-        {role: "assistant", content: "안녕하세요! 저는 수원타겟존의 안내도우미 타수미입니다. 무엇을 도와드릴까요?."},
-    ]
+    let userMessages = req.body.userMessages;
+    let assistantMessages = req.body.assistantMessages;
+
+    // construct messages array based on user and assistant messages
+    let messages = [];
+    for (let i = 0; i < userMessages.length; i++) {
+        messages.push({role: "user", content: userMessages[i]});
+        if (assistantMessages[i]) {
+            messages.push({role: "assistant", content: assistantMessages[i]});
+        }
+    }
 
     const maxRetries = 3;
     let retries = 0;
