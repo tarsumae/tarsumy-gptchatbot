@@ -1,52 +1,50 @@
-// const serverless = require('serverless-http');
+require('dotenv').config();
+const apiKey = process.env.OPENAI_API_KEY;
 const fs = require('fs');
 const path = require('path');
-const express = require('express');
-var cors = require('cors');
-const app = express();
-const PORT = 8080;
-const apiKey = process.env.OPENAI_API_KEY;
 const { Configuration, OpenAIApi } = require("openai");
+const express = require('express')
+const serverless = require('serverless-http');
+var cors = require('cors')
+const app = express()
 
-// setup OpenAI configuration
-const configuration = new Configuration({apiKey: apiKey});
+const configuration = new Configuration({
+    apiKey: apiKey,
+  });
 const openai = new OpenAIApi(configuration);
 
 // read system.txt file
-const systemMessage = fs.readFileSync('system.txt', 'utf-8'); // replace 'frontend' with your actual directory name
+const systemMessage = fs.readFileSync('system.txt', 'utf-8'); // read system.txt file
 
+//CORS 이슈 해결
 let corsOptions = {
-    origin: 'https://web-tarsumy-gptchatbot-7e6o2cli1ltald.sel4.cloudtype.app',
-    credentials: true,
-    optionsSuccessStatus: 200
+    origin: 'https://tarsumy.pages.dev',
+    credentials: true
 }
+app.use(cors(corsOptions));
 
-app.use(cors(corsOptions), function(req, res, next) {
-  console.log("CORS passed");
-  next();
-});
-
+//POST 요청 받을 수 있게 만듬
 app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // POST method route
-app.post('/tarsymy', async function (req, res) {
-    let userMessages = req.body.userMessages;
-    let assistantMessages = req.body.assistantMessages;
+app.post('/tarsumy', async function (req, res) {
+    let userMessage = req.body.message;
 
-    // construct messages array based on user and assistant messages
-    let messages = [];
-    for (let i = 0; i < userMessages.length; i++) {
-        messages.push({role: "user", content: userMessages[i]});
-        if (assistantMessages[i]) {
-            messages.push({role: "assistant", content: assistantMessages[i]});
-        }
+    if (!userMessage) {
+        return res.status(400).json({ error: 'User message is required' });
     }
+
+    // construct messages array based on user message
+    let messages = [
+        {role: "system", content: systemMessage},
+        {role: "user", content: userMessage}
+    ];
 
     const maxRetries = 3;
     let retries = 0;
     let completion;
-    
+
     while (retries < maxRetries) {
         try {
             completion = await openai.createChatCompletion({
@@ -54,7 +52,6 @@ app.post('/tarsymy', async function (req, res) {
                 temperature: 1.0,
                 top_p: 0.9,
                 max_tokens: 412,
-                // frequency_penalty: 0.3,
                 messages: messages,
             });
             break;
@@ -66,22 +63,10 @@ app.post('/tarsymy', async function (req, res) {
     }
 
     let tarsumy = completion.data.choices[0].message['content']
+    console.log(tarsumy);
     res.json({"assistant": tarsumy});
 });
 
-// express로 웹 서버 시작
-app.listen(PORT, function() {
-  console.log("Listening on port" + PORT);
-});
+module.exports.handler = serverless(app);
 
-app.use(function (err, req, res, next) {
-   console.error(err.stack)
-   res.status(500).send('Something broke!')
-})
-
-//module.exports.handler = serverless(app);
-// app.listen(5500, () => {
-//     console.log('Server is running on port 5500');
-// });
-
-
+// app.listen(3000)
